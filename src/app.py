@@ -6,6 +6,9 @@ import plotly.graph_objects as go
 from datetime import date
 import pandas as pd
 
+app = Dash(__name__)
+server = app.server
+
 lincoln_df = pd.read_csv('lincoln_df.csv')
 lincoln_daily = lincoln_df.groupby(['ICP','ReadingDate'],as_index=False)['kWh'].sum().reset_index(drop=True)
 lincoln_daily_wide = lincoln_daily.pivot(index='ReadingDate',columns='ICP',values='kWh').reset_index().rename_axis(None,axis=1)
@@ -115,8 +118,7 @@ def group_charts(df,clk_date):
 
     return fig
 
-app = Dash(__name__)
-server = app.server
+
 
 app.layout = dbc.Container([
     html.H2("Lincoln University Electricity Consumption", style={'font-family':'arial','textAlign':'center'}),
@@ -160,4 +162,5 @@ def update_group_charts(clk_data):
         return fig2        
 
 
-app.run_server(debug=False)
+if __name__ == "__main__":
+    app.run_server(debug=False)
